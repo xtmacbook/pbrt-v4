@@ -160,6 +160,19 @@ class SurfaceInteraction : public Interaction {
     // SurfaceInteraction Public Methods
     SurfaceInteraction() = default;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="pi"> 交点位置 </param>
+    /// <param name="uv"> 纹理坐标 </param>
+    /// <param name="wo"> 模型坐标系射线向量 </param>
+    /// <param name="dpdu">点偏导</param>
+    /// <param name="dpdv"></param>
+    /// <param name="dndu"></param>
+    /// <param name="dndv">向量偏导</param>
+    /// <param name="time"></param>
+    /// <param name="flipNormal"></param>
+    /// <returns></returns>
     PBRT_CPU_GPU
     SurfaceInteraction(Point3fi pi, Point2f uv, Vector3f wo, Vector3f dpdu, Vector3f dpdv,
                        Normal3f dndu, Normal3f dndv, Float time, bool flipNormal)

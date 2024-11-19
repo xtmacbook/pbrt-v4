@@ -27,6 +27,11 @@
 
 namespace pbrt {
 
+    /*
+        pbrt usually also provides functions that invert sampling operations, returning the random sample \xi that corresponds to a value x. 
+    */
+
+
 // Sampling Function Declarations
 PBRT_CPU_GPU inline int SampleDiscrete(pstd::span<const Float> weights, Float u,
                                        Float *pmf = nullptr, Float *uRemapped = nullptr);
@@ -75,6 +80,12 @@ PBRT_CPU_GPU inline Float PowerHeuristic(int nf, Float fPdf, int ng, Float gPdf)
         return 1;
     return Sqr(f) / (Sqr(f) + Sqr(g));
 }
+
+/*
+    It takes a not-necessarily normalized set of nonnegative weights, 
+    a uniform random sample u, and returns the index of one of the weights with probability proportional to its weight. 
+    The sampling operation it performs corresponds to finding  such that
+*/
 
 PBRT_CPU_GPU inline int SampleDiscrete(pstd::span<const Float> weights, Float u,
                                        Float *pmf, Float *uRemapped) {
@@ -621,6 +632,14 @@ class PiecewiseConstant1D {
     PiecewiseConstant1D(Allocator alloc) : func(alloc), cdf(alloc) {}
     PiecewiseConstant1D(pstd::span<const Float> f, Allocator alloc = {})
         : PiecewiseConstant1D(f, 0., 1., alloc) {}
+
+
+    /*
+        The PiecewiseConstant1D constructor takes n values of a piecewise-constant function f defined over a range [min,max].
+        (The generalization to a non-[0,1] interval simply requires remapping returned samples to the specified range and renormalizing the PDF based on its extent.)
+
+         
+    */
 
     PiecewiseConstant1D(pstd::span<const Float> f, Float min, Float max,
                         Allocator alloc = {})
@@ -1751,3 +1770,4 @@ class PiecewiseLinear2D {
 }  // namespace pbrt
 
 #endif  // PBRT_UTIL_SAMPLING_H
+

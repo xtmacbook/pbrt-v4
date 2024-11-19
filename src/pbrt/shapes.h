@@ -31,7 +31,10 @@ struct ShapeSample {
     std::string ToString() const;
 };
 
-// ShapeSampleContext Definition
+/*
+    Information about the reference point, 
+    its geometric and shading normals 
+*/  
 struct ShapeSampleContext {
     // ShapeSampleContext Public Methods
     ShapeSampleContext() = default;
@@ -98,8 +101,8 @@ struct ShapeIntersection {
 
 // QuadricIntersection Definition
 struct QuadricIntersection {
-    Float tHit;
-    Point3f pObj;
+    Float tHit; //hit time
+    Point3f pObj; //hit point
     Float phi;
 };
 
@@ -289,6 +292,18 @@ class Sphere {
     PBRT_CPU_GPU
     Float PDF(const Interaction &) const { return 1 / Area(); }
 
+    /*
+        For points that lie inside the sphere, the entire sphere should be sampled, 
+        since the whole sphere is visible from inside it.
+        
+        Note that the reference point used in this determination, pOrigin, 
+        is computed using the OffsetRayOrigin() function. 
+        
+        Doing so ensures that if the reference point came from a ray intersecting the sphere, 
+        the point tested does not lie on the wrong side of the sphere due to rounding error.
+
+        
+    */
     PBRT_CPU_GPU
     pstd::optional<ShapeSample> Sample(const ShapeSampleContext &ctx, Point2f u) const {
         // Sample uniformly on sphere if $\pt{}$ is inside it
@@ -320,7 +335,8 @@ class Sphere {
         Float oneMinusCosThetaMax = 1 - cosThetaMax;
 
         // Compute $\theta$ and $\phi$ values for sample in cone
-        Float cosTheta = (cosThetaMax - 1) * u[0] + 1;
+        //https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-lighting/introduction-to-lighting-spherical-light-cone-sampling.html
+        Float cosTheta = (cosThetaMax - 1) * u[0] + 1; //
         Float sin2Theta = 1 - Sqr(cosTheta);
         if (sin2ThetaMax < 0.00068523f /* sin^2(1.5 deg) */) {
             // Compute cone sample via Taylor series expansion for small angles
@@ -504,6 +520,11 @@ class Disk {
     bool IntersectP(const Ray &r, Float tMax = Infinity) const {
         return BasicIntersect(r, tMax).has_value();
     }
+
+    /*
+       Note that our implementation here does not account for partial disks due to Disk::innerRadius being nonzero or
+       Disk::phiMax being less than . Fixing this bug is left for an exercise at the end of the chapter.
+    */
 
     PBRT_CPU_GPU
     pstd::optional<ShapeSample> Sample(Point2f u) const {
@@ -828,6 +849,7 @@ PBRT_CPU_GPU
 pstd::optional<TriangleIntersection> IntersectTriangle(const Ray &ray, Float tMax,
                                                        Point3f p0, Point3f p1,
                                                        Point3f p2);
+
 
 // Triangle Definition
 class Triangle {

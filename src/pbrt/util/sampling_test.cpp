@@ -26,6 +26,8 @@ using namespace pbrt;
 TEST(SampleDiscrete, Basics) {
     Float pdf;
 
+    EXPECT_EQ(0, SampleDiscrete({Float(5), Float(2.0), Float(3)}, 0.251, &pdf));
+
     EXPECT_EQ(0, SampleDiscrete({Float(5)}, 0.251, &pdf));
     EXPECT_EQ(1, pdf);
 
@@ -1327,3 +1329,12 @@ TEST(Sampling, HGExtremes) {
         }
     }
 }
+
+
+/*   
+
+
+ 
+
+
+*/

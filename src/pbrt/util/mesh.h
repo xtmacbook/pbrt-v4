@@ -20,7 +20,6 @@
 
 namespace pbrt {
 
-// TriangleMesh Definition
 class TriangleMesh {
   public:
     // TriangleMesh Public Methods
@@ -40,8 +39,8 @@ class TriangleMesh {
     const int *vertexIndices = nullptr;
     const Point3f *p = nullptr;
     const Normal3f *n = nullptr;
-    const Vector3f *s = nullptr;
-    const Point2f *uv = nullptr;
+    const Vector3f *s = nullptr; //tangent vector
+    const Point2f *uv = nullptr; //texture coordinate
     const int *faceIndices = nullptr;
     bool reverseOrientation, transformSwapsHandedness;
 };

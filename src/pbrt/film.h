@@ -262,7 +262,7 @@ class RGBFilm : public FilmBase {
         // Update pixel values with filtered sample contribution
         Pixel &pixel = pixels[pFilm];
         for (int c = 0; c < 3; ++c)
-            pixel.rgbSum[c] += weight * rgb[c];
+            pixel.rgbSum[c] += weight * rgb[c]; //Equation (5.13)
         pixel.weightSum += weight;
     }
 
@@ -327,7 +327,11 @@ class RGBFilm : public FilmBase {
     Array2D<Pixel> pixels;
 };
 
-// GBufferFilm Definition
+/*
+     The GBufferFilm stores not only RGB at each pixel,
+     but also additional information about the geometry at the first visible intersection point
+*/
+
 class GBufferFilm : public FilmBase {
   public:
     // GBufferFilm Public Methods
@@ -384,8 +388,13 @@ class GBufferFilm : public FilmBase {
     PBRT_CPU_GPU void ResetPixel(Point2i p) { std::memset(&pixels[p], 0, sizeof(Pixel)); }
 
   private:
-    // GBufferFilm::Pixel Definition
-    struct Pixel {
+    
+      /*
+         It also stores estimates of the variance of the red, green, and
+         blue color values at each pixel using the VarianceEstimator class
+
+      */
+      struct Pixel {
         Pixel() = default;
         double rgbSum[3] = {0., 0., 0.};
         double weightSum = 0., gBufferWeightSum = 0.;
@@ -618,3 +627,7 @@ inline void Film::ResetPixel(Point2i p) {
 }  // namespace pbrt
 
 #endif  // PBRT_FILM_H
+
+/*
+
+*/

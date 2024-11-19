@@ -372,6 +372,7 @@ Vector3f SampleHenyeyGreenstein(Vector3f wo, Float g, Point2f u, Float *pdf) {
     return wi;
 }
 
+
 Point2f RejectionSampleDisk(RNG &rng) {
     Point2f p;
     do {
@@ -656,3 +657,5 @@ std::string SummedAreaTable::ToString() const {
 }
 
 }  // namespace pbrt
+
+ 
